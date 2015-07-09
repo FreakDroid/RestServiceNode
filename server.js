@@ -26,20 +26,30 @@ var github = new GitHubApi({
     }
 });
 
-//Llamada al Api desde el wrapper
-//Esto debera ir en un metodo get
-github.user.getFollowingFromUser({
-    user: "freakdroid"
-}, function(err, res) {
-    console.log(JSON.stringify(res));
-});
-
-
 //Routes
 //Algunas de prueba
-app.get('/', function(req, res){
+app.get('/user/:user', function(req, res){
   res.send('hola mundo');
+  var _user = req.params.user;
+  //Llamada al Api desde el wrapper
+  github.user.getFollowingFromUser({
+      user: _user
+  }, function(err, res) {
+      console.log(JSON.stringify(res));
+  });
 });
+
+app.get('/org/:org', function(req, res){
+  res.send('hola mundo Org');
+  var _org = req.params.org;
+  //Llamada al Api desde el wrapper
+  github.orgs.get({
+      org: _org
+  }, function(err, res) {
+      console.log(JSON.stringify(res));
+  });
+});
+
 
 app.get('/about', function(req, res){
   res.send('Hola estoy en about');

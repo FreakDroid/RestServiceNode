@@ -26,8 +26,15 @@ var github = new GitHubApi({
     }
 });
 
+
+//Autenticacion necesaria para enlazar el API
+github.authenticate({
+    type: "oauth",
+    token: '6d42366f326b5917c604c723935dbad4f88a36cb' //Tu token de desarrollo acá
+});
+
 //Routes
-//Algunas de prueba
+//Devuele la informacion de un usuario en especifico
 app.get('/user/:user', function(req, res){
   res.send('hola mundo');
   var _user = req.params.user;
@@ -39,18 +46,34 @@ app.get('/user/:user', function(req, res){
   });
 });
 
+
+//Devuelve la info de una org cualquiera (No se necesitan permisos)
 app.get('/org/:org', function(req, res){
-  res.send('hola mundo Org');
+  //res.send('hola mundo Org');
   var _org = req.params.org;
   //Llamada al Api desde el wrapper
   github.orgs.get({
       org: _org
-  }, function(err, res) {
-      console.log(JSON.stringify(res));
+  }, function(err, resp) {
+     res.send(JSON.stringify(resp));
   });
 });
 
 
+//Devuelve todos los team de la organizacion (Requiere autenticacion)
+app.get('/team/:org', function(req, res){
+  //res.send('hola mundo Org');
+  var _org = req.params.org;
+  //Llamada al Api desde el wrapper
+  github.orgs.getTeams({
+      org: _org
+  }, function(err, resp) {
+     res.send(JSON.stringify(resp));
+  });
+});
+
+
+//Ruta de prueba
 app.get('/about', function(req, res){
   res.send('Hola estoy en about');
 });
